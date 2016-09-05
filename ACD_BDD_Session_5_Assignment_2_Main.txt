@@ -1,0 +1,30 @@
+namenode:
+1. Name node build metadata from block report which is sent by data nodes. The Name Node oversees and coordinates the data storage function (HDFS)
+2. Since it caontains metadata for datanodes, if namenode is down hdfs is down. It is central controller of hadoop cluster but it does not contain actual data. Name node is considered to be single point of failure.
+3. Due to namenode, client is able to access datanodes for the required blocks where data is avaliable.
+4. Namenode checks the overall health of data nodes periodically as data nodes send heartbeat every 3 seconds.
+5. Namenode make sure to maintain replication of data node in case data node is presumed by namenode as dead when it stopped receiving heartbeat from a data node. Based on the block reports it had been receiving from the dead node, the Name Node knows which copies of blocks died along with the node and can make the decision to re-replicate those blocks to other Data Nodes. It will also consult the Rack Awareness data in order to maintain the two copies in one rack, one copy in another rack replica rule when deciding which Data Node should receive a new copy of the blocks. 
+
+Datanode:
+ 
+1. Datanode is directly contacted by client for the data read and write. Client get the information of data nodes from name node.
+2. When block is written by client on a data node, block is replicated by data node to other data node through replication pipeline and this cycle repeats for other blocks also. Each data node send acknowledgement and block report to namenode about the replication of data when completed.
+3. Data node send heartbeat every 3 seconds to name node identifying itself as alive. In case it is dead, name node copy all blocks of the dead data node to other data node.
+4. Block size in datanode is defined as default of 64 MB ot 128 MB.
+5. Data node has more hard disk space since it stores lot of data. Data node is also called  slave node.
+
+Resource Manager:
+1. It has authority to arbitrates resources among all application in the system.
+2. Resource Manager has Scheduler which is responsible for resource allocation to different running applications. It performs scheduling based on availability of resource requirement like memory, cpu, network, etc.
+3. Resource Manager works with per node Node Manager and per application Application Master.
+4. Core of resource manager is Application Manager and Yarn Scheduler.
+5. Resource Manager has interface to communicate with client like ClientService, with nodes like ResourceTrackerService, NMLivelinessMonitor.
+
+Node Manager:
+1. It has the responsibility of launching resource container and monitoring resource usage and inform to resource manager.
+2. It checks the overall health of the node. It also monitor disk health by creating temporary files on disk. 
+3. Any changes in health of node is informed to Resource Manager.
+4. To facilitate container launch, the NM expects to receive detailed information about a container’s runtime as part of the container-specifications which includes the container’s command line, environment variables, a list of (file) resources required by the container and any security tokens.
+5. Node Manager is slave in the YARN architecture
+
+
